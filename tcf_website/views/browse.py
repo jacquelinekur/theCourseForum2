@@ -29,6 +29,11 @@ from ..models import (
     Semester,
 )
 
+def study_guide(request):
+    return render(
+        request,
+        "study_guide/study_guide.html"
+    )
 
 def browse(request):
     """View for browse page."""

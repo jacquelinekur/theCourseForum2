@@ -38,6 +38,13 @@
                     </a>
                     {% include "schedule/add_course_modal.html" with user_id=user.id course=course%}
                 </div>
+                <div class="d-flex justify-content-end">
+                    <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-info text-white">New</span>
+                    <a class="ml-2 mt-2 btn bg-tcf-orange text-white" id="open_select_modal_button" type="button"
+                    class="open_select_modal_button"  data-toggle="modal" data-target="#selectScheduleModal" >
+                        <i aria-hidden="true"></i> Study Guide
+                    </a>
+                </div>
             </div>
 
             <!-- Course Description -->

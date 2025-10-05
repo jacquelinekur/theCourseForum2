@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quill Rich Text Editor — Example</title>
+
+  <!-- Quill CDN (styles) -->
+  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding: 24px; background: #f7f9fc; }
+    .editor-card { max-width: 900px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 6px 18px rgba(10,20,40,0.06); padding: 18px; }
+    .toolbar-row { margin-bottom: 12px; }
+    #editor { height: 420px; }
+    .controls { display:flex; gap:8px; margin-top:12px; align-items:center; }
+    button { padding:8px 12px; border-radius:6px; border:1px solid #d6dbe9; background:#fff; cursor:pointer; }
+    button.primary { background:#2563eb; color:white; border-color:transparent; }
+    pre.output { white-space:pre-wrap; background:#0f1724; color:#e6eef8; padding:12px; border-radius:6px; max-height:240px; overflow:auto; }
+  </style>
+</head>
+<body>
+  <div class="editor-card">
+    <h2>Quill Rich Text Editor — Example Page</h2>
+
+    <!-- Create toolbar container -->
+    <div id="toolbar" class="toolbar-row">
+      <!-- Add formatting options -->
+      <span class="ql-formats">
+        <select class="ql-font"></select>
+        <select class="ql-size"></select>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-bold"></button>
+        <button class="ql-italic"></button>
+        <button class="ql-underline"></button>
+        <button class="ql-strike"></button>
+      </span>
+      <span class="ql-formats">
+        <select class="ql-color"></select>
+        <select class="ql-background"></select>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-list" value="ordered"></button>
+        <button class="ql-list" value="bullet"></button>
+        <button class="ql-indent" value="-1"></button>
+        <button class="ql-indent" value="+1"></button>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-align" value=""></button>
+        <button class="ql-align" value="center"></button>
+        <button class="ql-align" value="right"></button>
+        <button class="ql-align" value="justify"></button>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-link"></button>
+        <button class="ql-image"></button>
+        <button class="ql-video"></button>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-clean"></button>
+      </span>
+    </div>
+
+    <!-- Editor container -->
+    <div id="editor"></div>
+
+    <div class="controls">
+      <button id="get-html" class="primary">Get HTML</button>
+      <button id="get-text">Get Plain Text</button>
+      <button id="download-html">Download HTML</button>
+      <button id="clear">Clear</button>
+      <span style="margin-left:auto; font-size:13px; color:#6b7280">Quill v1.3.7 (CDN)</span>
+    </div>
+
+    <h4>Output</h4>
+    <pre id="output" class="output"></pre>
+  </div>
+
+  <!-- Quill CDN (scripts) -->
+  <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+
+  <script>
+    // Initialize Quill
+    var quill = new Quill('#editor', {
+      modules: {
+        toolbar: '#toolbar'
+      },
+      placeholder: 'Compose an epic...',
+      theme: 'snow'
+    });
+
+    // UI elements
+    var output = document.getElementById('output');
+    var btnHtml = document.getElementById('get-html');
+    var btnText = document.getElementById('get-text');
+    var btnDownload = document.getElementById('download-html');
+    var btnClear = document.getElementById('clear');
+
+    function showHtml() {
+      var html = quill.root.innerHTML;
+      output.textContent = html;
+    }
+
+    function showText() {
+      var text = quill.getText();
+      output.textContent = text;
+    }
+
+    function downloadHtmlFile(filename, content) {
+      var blob = new Blob([content], { type: 'text/html' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function(){ URL.revokeObjectURL(url); a.remove(); }, 100);
+    }
+
+    btnHtml.addEventListener('click', showHtml);
+    btnText.addEventListener('click', showText);
+    btnDownload.addEventListener('click', function() {
+      var html = `<!doctype html>\n<html><head><meta charset=\"utf-8\"><title>Export</title></head><body>\n${quill.root.innerHTML}\n</body></html>`;
+      downloadHtmlFile('quill-export.html', html);
+    });
+    btnClear.addEventListener('click', function() { quill.setContents([]); output.textContent = ''; });
+
+    // Example: load sample content
+    quill.setContents([
+      { insert: 'Welcome to Quill!\n', attributes: { bold: true, size: 'large' } },
+      { insert: '\nThis editor supports formatting, lists, images, videos, and more. Try typing and use the toolbar.' }
+    ]);
+  </script>
+</body>
+</html>
